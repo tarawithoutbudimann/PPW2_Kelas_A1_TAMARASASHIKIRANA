@@ -1,41 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Barang</title>
-    <!-- Mengimpor CSS Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>Data Barang</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nama Barang</th>
-                    <th>Harga</th>
-                    <th>Stok</th>
-                    <th>ID Supplier</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($barangbanyak as $barang)
-                    <tr>
-                        <td>{{ $barang->id }}</td>
-                        <td>{{ $barang->nama_barang }}</td>
-                        <td>{{ $barang->harga }}</td>
-                        <td>{{ $barang->stok }}</td>
-                        <td>{{ $barang->id_supplier }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+<?php
 
-    <!-- Mengimpor JS Bootstrap (opsional, jika diperlukan) -->
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</body>
-</html>
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
+define('LARAVEL_START', microtime(true));
+
+/*
+|--------------------------------------------------------------------------
+| Check If The Application Is Under Maintenance
+|--------------------------------------------------------------------------
+|
+| If the application is in maintenance / demo mode via the "down" command
+| we will load this file so that any pre-rendered content can be shown
+| instead of starting the framework, which could cause an exception.
+|
+*/
+
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader for
+| this application. We just need to utilize it! We'll simply require it
+| into the script here so we don't need to manually load our classes.
+|
+*/
+
+require __DIR__.'/../vendor/autoload.php';
+
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can handle the incoming request using
+| the application's HTTP kernel. Then, we will send the response back
+| to this client's browser, allowing them to enjoy our application.
+|
+*/
+
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+$kernel = $app->make(Kernel::class);
+
+$response = $kernel->handle(
+    $request = Request::capture()
+)->send();
+
+$kernel->terminate($request, $response);
